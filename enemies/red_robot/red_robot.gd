@@ -246,5 +246,5 @@ func _on_area_body_entered(body):
 
 
 func _on_area_body_exited(body):
-	if body is Player:
+	if body is Player or body.name == "Target":
 		player = null

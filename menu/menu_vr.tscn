@@ -1,0 +1,194 @@
+[gd_scene load_steps=28 format=2]
+
+[ext_resource path="res://menu/menu_vr.gd" type="Script" id=1]
+[ext_resource path="res://menu/experiment.hdr" type="Texture" id=2]
+[ext_resource path="res://player/model/player.glb" type="PackedScene" id=3]
+[ext_resource path="res://menu/floor.png" type="Texture" id=4]
+[ext_resource path="res://menu/menu_intro_music.ogg" type="AudioStream" id=5]
+[ext_resource path="res://menu/tps_demo_vr.png" type="Texture" id=6]
+[ext_resource path="res://addons/godot-xr-tools/objects/Viewport_2D_in_3D.tscn" type="PackedScene" id=7]
+[ext_resource path="res://menu/UI.tscn" type="PackedScene" id=8]
+[ext_resource path="res://menu/VR.png" type="Texture" id=9]
+[ext_resource path="res://menu/Loading.tscn" type="PackedScene" id=10]
+[ext_resource path="res://enemies/red_robot/red_robot.tscn" type="PackedScene" id=19]
+[ext_resource path="res://player/bullet/bullet.tscn" type="PackedScene" id=20]
+[ext_resource path="res://main/base.tscn" type="PackedScene" id=21]
+
+[sub_resource type="PanoramaSky" id=1]
+panorama = ExtResource( 2 )
+
+[sub_resource type="Environment" id=2]
+background_mode = 3
+background_sky = SubResource( 1 )
+glow_enabled = true
+glow_levels/7 = true
+glow_intensity = 0.4
+glow_blend_mode = 1
+glow_hdr_threshold = 0.34
+glow_bicubic_upscale = true
+
+[sub_resource type="QuadMesh" id=3]
+size = Vector2( 15, 15 )
+
+[sub_resource type="SpatialMaterial" id=4]
+albedo_texture = ExtResource( 4 )
+metallic = 0.78
+
+[sub_resource type="AnimationNodeBlend2" id=5]
+resource_local_to_scene = true
+filter_enabled = true
+filters = [ "Robot_Skeleton/Skeleton:eyelid.d.L", "Robot_Skeleton/Skeleton:eyelid.d.R", "Robot_Skeleton/Skeleton:eyelid.u.L", "Robot_Skeleton/Skeleton:eyelid.u.R", "Robot_Skeleton/Skeleton:eyes" ]
+
+[sub_resource type="AnimationNodeAnimation" id=6]
+resource_local_to_scene = true
+animation = "Idlecombatrest-cycle"
+
+[sub_resource type="AnimationNodeAnimation" id=7]
+resource_local_to_scene = true
+animation = "eyes-cycle"
+
+[sub_resource type="AnimationNodeBlendTree" id=8]
+resource_local_to_scene = true
+graph_offset = Vector2( -260.487, 63.5 )
+nodes/Blend/node = SubResource( 5 )
+nodes/Blend/position = Vector2( 180, 120 )
+nodes/CombatRest/node = SubResource( 6 )
+nodes/CombatRest/position = Vector2( -120, 100 )
+nodes/Eyes/node = SubResource( 7 )
+nodes/Eyes/position = Vector2( -40, 220 )
+nodes/output/position = Vector2( 420, 120 )
+node_connections = [ "output", 0, "Blend", "Blend", 0, "CombatRest", "Blend", 1, "Eyes" ]
+
+[sub_resource type="BoxShape" id=20]
+extents = Vector3( 2, 1, 2 )
+
+[sub_resource type="BoxShape" id=21]
+extents = Vector3( 5, 5, 1 )
+
+[sub_resource type="SpatialMaterial" id=22]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 6 )
+
+[sub_resource type="QuadMesh" id=23]
+material = SubResource( 22 )
+size = Vector2( 5, 1 )
+
+[sub_resource type="SpatialMaterial" id=24]
+flags_transparent = true
+flags_unshaded = true
+albedo_texture = ExtResource( 9 )
+
+[sub_resource type="QuadMesh" id=25]
+material = SubResource( 24 )
+size = Vector2( 5, 1 )
+
+[node name="MenuVR" instance=ExtResource( 21 )]
+script = ExtResource( 1 )
+enable_pointers = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="0"]
+environment = SubResource( 2 )
+
+[node name="PlayerModel" parent="." index="1" instance=ExtResource( 3 )]
+
+[node name="Robot_Skeleton" parent="PlayerModel" index="0"]
+transform = Transform( 0.803991, 0, 0, 0, 0.803991, 0, 0, 0, 0.803991, 0, 0, 0 )
+
+[node name="UI" parent="." index="2" instance=ExtResource( 7 )]
+transform = Transform( 0.95168, 0, 0.307091, 0, 1, 0, -0.307091, 0, 0.95168, -1.76439, 1.58249, 0.270234 )
+viewport_size = Vector2( 1500, 1000 )
+scene = ExtResource( 8 )
+collision_layer = 8
+
+[node name="Loading" parent="." index="3" instance=ExtResource( 7 )]
+transform = Transform( 0.995918, 0, 0.090268, 0, 1, 0, -0.090268, 0, 0.995918, -1.66831, 1.20235, -0.829964 )
+visible = false
+screen_size = Vector2( 4, 0.5 )
+viewport_size = Vector2( 800, 100 )
+scene = ExtResource( 10 )
+collision_layer = 0
+
+[node name="DoneTimer" type="Timer" parent="Loading" index="3"]
+wait_time = 0.5
+one_shot = true
+
+[node name="SoundEffects" type="Node" parent="." index="4"]
+__meta__ = {
+"_editor_description_": "There must be an AudioStreamPlayer node at the path \"SoundEffects/Step\" next to the player model, anywhere that the player model is instanced. This is to prevent the animation from deleting the step from the track."
+}
+
+[node name="Step" type="AudioStreamPlayer" parent="SoundEffects" index="0"]
+__meta__ = {
+"_editor_description_": "There must be an AudioStreamPlayer node at the path \"SoundEffects/Step\" next to the player model, anywhere that the player model is instanced. This is to prevent the animation from deleting the step from the track."
+}
+
+[node name="Floor" type="MeshInstance" parent="." index="5"]
+transform = Transform( 1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0 )
+mesh = SubResource( 3 )
+material/0 = SubResource( 4 )
+
+[node name="SpotLight" type="SpotLight" parent="." index="6"]
+transform = Transform( 0.967027, 0, 0.254675, -0.225291, 0.466312, 0.855452, -0.118758, -0.88462, 0.450936, 0.557445, 2.31204, 0.556668 )
+shadow_enabled = true
+shadow_bias = 0.01
+
+[node name="Music" type="AudioStreamPlayer" parent="." index="7"]
+stream = ExtResource( 5 )
+autoplay = true
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="8"]
+tree_root = SubResource( 8 )
+anim_player = NodePath("../PlayerModel/AnimationPlayer")
+active = true
+parameters/Blend/blend_amount = 1.0
+
+[node name="BackgroundCache" type="Spatial" parent="." index="9"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -15, -10, -10 )
+__meta__ = {
+"_editor_description_": "This section forces Godot to cache the models/materials/shaders by creating them on the menu. Everything is out of sight because it is behind the floor, but it's within the camera's view frustum."
+}
+
+[node name="RedRobot" parent="BackgroundCache" index="0" instance=ExtResource( 19 )]
+health = 1
+test_shoot = true
+
+[node name="Floor" type="StaticBody" parent="BackgroundCache" index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0 )
+collision_layer = 2147483651
+collision_mask = 3
+
+[node name="CollisionShape" type="CollisionShape" parent="BackgroundCache/Floor" index="0"]
+shape = SubResource( 20 )
+
+[node name="Target" type="StaticBody" parent="BackgroundCache" index="2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3 )
+collision_layer = 2147483650
+collision_mask = 2147483650
+
+[node name="CollisionShape" type="CollisionShape" parent="BackgroundCache/Target" index="0"]
+shape = SubResource( 21 )
+
+[node name="Bullet" parent="BackgroundCache" index="3" instance=ExtResource( 20 )]
+transform = Transform( -1, 8.4334e-08, 3.14739e-07, 0, 0.965926, -0.258819, -3.25841e-07, -0.258819, -0.965926, 0, -20, -80 )
+
+[node name="ExplosionAudio" parent="BackgroundCache/Bullet" index="4"]
+unit_db = -80.0
+
+[node name="SpawnPoint" parent="." index="10"]
+transform = Transform( 0.971301, 0, -0.237856, 0, 1, 0, 0.237856, 0, 0.971301, -1.75282, 0, 2.25314 )
+
+[node name="TPSDemoLogo" type="MeshInstance" parent="." index="11"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.06221, 2.57957, -0.925589 )
+mesh = SubResource( 23 )
+material/0 = null
+
+[node name="VRLogo" type="MeshInstance" parent="TPSDemoLogo" index="0"]
+transform = Transform( 0.991172, 0, -0.132585, 0, 1, 0, 0.132585, 0, 0.991172, -0.185831, 0.00590396, 0.572104 )
+mesh = SubResource( 25 )
+material/0 = null
+
+[connection signal="timeout" from="Loading/DoneTimer" to="." method="_on_loading_done_timer_timeout"]
+
+[editable path="PlayerModel"]
+[editable path="BackgroundCache/Bullet"]

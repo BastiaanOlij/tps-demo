@@ -1,0 +1,95 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://menu/button_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://menu/Loading.gd" type="Script" id=2]
+[ext_resource path="res://menu/button_hover.tres" type="StyleBox" id=9]
+[ext_resource path="res://menu/button_pressed.tres" type="StyleBox" id=10]
+[ext_resource path="res://menu/button_focus.tres" type="StyleBox" id=11]
+[ext_resource path="res://menu/button_normal.tres" type="StyleBox" id=12]
+
+[sub_resource type="Theme" id=9]
+Button/colors/font_color = Color( 1, 1, 1, 1 )
+Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+Button/colors/font_color_hover = Color( 1, 1, 1, 1 )
+Button/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+Button/constants/hseparation = 2
+Button/fonts/font = ExtResource( 1 )
+Button/styles/disabled = null
+Button/styles/focus = ExtResource( 11 )
+Button/styles/hover = ExtResource( 9 )
+Button/styles/normal = ExtResource( 12 )
+Button/styles/pressed = ExtResource( 10 )
+Label/colors/font_color = Color( 1, 1, 1, 1 )
+Label/colors/font_color_shadow = Color( 0, 0, 0, 0 )
+Label/colors/font_outline_modulate = Color( 1, 1, 1, 1 )
+Label/constants/line_spacing = 3
+Label/constants/shadow_as_outline = 0
+Label/constants/shadow_offset_x = 1
+Label/constants/shadow_offset_y = 1
+Label/fonts/font = ExtResource( 1 )
+Label/styles/normal = null
+
+[sub_resource type="StyleBoxFlat" id=18]
+bg_color = Color( 0.278431, 0.278431, 0.360784, 1 )
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id=19]
+bg_color = Color( 0.0901961, 0.0784314, 0.117647, 1 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color( 0, 0, 0, 1 )
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="Loading" type="Control"]
+margin_right = 800.0
+margin_bottom = 100.0
+theme = SubResource( 9 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Loading" type="HBoxContainer" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 15.0
+margin_top = -85.0
+margin_right = -15.0
+margin_bottom = -32.0
+custom_constants/separation = 100
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Loading"]
+margin_right = 169.0
+margin_bottom = 53.0
+custom_fonts/font = ExtResource( 1 )
+text = "Loading..."
+
+[node name="Progress" type="ProgressBar" parent="Loading"]
+margin_left = 269.0
+margin_right = 770.0
+margin_bottom = 53.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_styles/fg = SubResource( 18 )
+custom_styles/bg = SubResource( 19 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
